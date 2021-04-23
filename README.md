@@ -8,6 +8,10 @@ This project converts 2D images of rugs (e.g. jpegs) into 3D models that can be 
 
 See the [live demo here](https://quarup.github.io/rugs/).
 
+![live_demo](https://user-images.githubusercontent.com/46463924/115842995-ac341280-a41e-11eb-9418-6eed882ae4c0.png)
+
+Click on the bottom-right icon to see the rug in augmented reality. This requires a mobile device (Android or iOS). If you're on your desktop, you won't see this icon, but you should still see the 3D model.
+
 ## Installation
 
 ### Python libraries
@@ -34,6 +38,16 @@ If you don't have a Mac, you'll either have to look for pre-built binaries for y
 Follow [these instructions](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) to clone this repository `https://github.com/quarup/augmented-reality-rugs`
 
 ## Prepare images
+
+`prepare_images.py` converts 2D images of rugs (jpg, although other formats could be easily supported) to be used in the 3D models. The conversion does a couple of important things:
+
+1.   Replaces the background color with transparent. This is necessary as rugs aren't exactly rectangular and occupy 100% of the image, and we do not want to display the background color when we show the rug in augmented reality. This is particularly important for rugs that have non-rectangular shapes.
+2.   Shrinks the image so it is no bigger than 4.2 megapixels. This allows mobile phones (especially older ones) to display the 3D model in augmented reality. Failure to limit the image size sometimes causes problems (e.g. the phone may not display the rug at all).
+     >  I chose 4.2 megapixels somewhat arbitrarily (a large square image would be resized to 2048 * 2048, which seemed like a reasonably high resolution to me). However, there may be a more scientific way to choose the maximum size, especially if someone can find the specs of what phones can handle.
+
+> The converted images are stored in `png` format primarily because `jpg` does not natively support an alpha (transparency) channel. Unfortunately, `png` compression seems to be significantly worse for big images, so the resulting files are bigger, and therefore take longer to transfer to the user's devices. It may be worth trying to figure out a way to serve smaller files.
+> 
+> On the other hand, the mobile device likely needs to decompress the image to its full size to be displayed on the screen. Therefore we will always want to keep a maximum number of pixels per image regardless of how well we can compress it.
 
 ## Generate GL Transmission Format (GLTF) models
 
