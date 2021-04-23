@@ -95,7 +95,7 @@ This outputs a `.usdz` file per `.gltf` file on the same directory.
 
 ## Generate HTML
 
-Next, we use the [<model-viewer> HTML tag](https://modelviewer.dev/) to display the 3D models in HTML.
+Next, we use the [\<model-viewer\> HTML tag](https://modelviewer.dev/) to display the 3D models in HTML.
 
 For convenience, run this command to automatically generate HTML for the models in the examples directory:
 
