@@ -135,6 +135,10 @@ If you already have an internet server set up, then you can just upload the `exa
 
 The disadvantage of GitHub Pages is that they can take a while to pick up your changes (sometimes 10+ minutes). So it can be a bit annoying when you're making a lot of changes quickly and want to see the results right away.
 
+## Inspiration and history
+
+I've developed this as a feature in https://www.teppichportal.ch/. Hopefully you'll see it live there soon.
+
 ## Contributions and contact
 
 Feel free to use this code as you wish. If possible, please update this code as you make improvements, and/or contact me for whatever reason.
