@@ -118,9 +118,9 @@ cd examples/models
 python -m http.server
 ```
 
-Then open your browser to http://localhost:8000/index.html. The caveat is that desktop browsers can load the 3D model, but don't support augmented reality. So this local server allows you to check that the models are loading fine, but to load augmented reality, you will either
+Then open your browser to http://localhost:8000/index.html. The caveat is that desktop browsers can load the 3D model, but don't support augmented reality. So this local server allows you to check that the GLTF models are loading fine, but to load augmented reality, you will either need to
 
-1.   need to load the website from a mobile device, which would likely require you to set up the desktop to users browsing from the network, and then browse from the phone using your desktop's local IP instead of `localhost`, or
+1.   load the website from a mobile device, which would likely require you to set up the desktop to users browsing from the network, and then browse from the phone using your desktop's local IP instead of `localhost`, or
 2.   serve the HTML on a proper internet server (see options below)
 
 Please update this document, or let me know the steps to get #1 to work (i.e. load the web page on a mobile device by using a local server). This would be a nice speed up in development.
@@ -137,7 +137,7 @@ The disadvantage of GitHub Pages is that they can take a while to pick up your c
 
 ## Inspiration and history
 
-I've developed this as a feature in https://www.teppichportal.ch/. Hopefully you'll see it live there soon.
+I've developed this as a feature for https://www.teppichportal.ch/. Hopefully you'll see it live there soon.
 
 ## Contributions and contact
 
