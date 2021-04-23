@@ -48,7 +48,8 @@ Follow [these instructions](https://docs.github.com/en/github/creating-cloning-a
 Run the following command to prepare the images in the examples directory. It will read from the JPG files, convert, and write out the output as PNG files in the same directory:
 
 ```
-python generator/prepare_images.py --images "examples/*.jpg"
+python generator/prepare_images.py \
+--images "examples/images/*.jpg"
 ```
 
 > The converted images are stored in `png` format primarily because `jpg` does not natively support an alpha (transparency) channel. Unfortunately, `png` compression seems to be significantly worse for big images, so the resulting files are bigger, and therefore take longer to transfer to the user's devices. It may be worth trying to figure out a way to serve smaller files.
@@ -57,17 +58,85 @@ python generator/prepare_images.py --images "examples/*.jpg"
 
 ## Generate GL Transmission Format (GLTF) models
 
-### Input
+Mobile devices use the GLTF models for previewing and (in the case of Android) in Augmented Reality mode.
 
-*   Each rug should have a 2d image provided as a jpg (although other formats could be easily supported). The files should be named `ID.jpg` where `ID` must match an entry in the CSV file below.
-*   a CSV file contains one row per rug, with columns:
-    *    `ID` matching the name of the jpg file.
+Run the following comment to generate GLTF models in the examples directory:
+
+```
+python geneator/generate_gltf.py \
+--input_csv=examples/examples.csv \
+--input_images=examples/images \
+--output_models=examples/models
+```
+
+Explanation of each parameter:
+
+*   `--input_csv` should point to a CSV file containing one row per rug, with columns:
+    *    `ID` matching the name of the rug's image file.
     *    `L cm` matching the length (height) of the rug in centimeters.
     *    `W cm` matching the width of the rug in centimeters.
+*   `--input_images` is the directory used in the previous step
+*   `--outputmodels` will contain, per rug
+    *    the `.png` file copied from `--input_images`
+    *    the `.gltf` model containing the rug's shape and texture, referring back to the `.png` file
 
 ## Generate Universal Scene Description (USD) models
 
+Next, we generate the USD models, which are necessary for the augmented reality on iOS:
+
+```
+for file in examples/models/*.gl*
+do
+  usdzconvert "$file"
+done
+```
+
+This outputs a `.usdz` file per `.gltf` file on the same directory.
+
 ## Generate HTML
+
+Next, we use the [<model-viewer> HTML tag](https://modelviewer.dev/) to display the 3D models in HTML.
+
+For convenience, run this command to automatically generate HTML for the models in the examples directory:
+
+```
+python /Users/laure/Documents/quarup/GitHub/quarup.github.io/rugs/generator/create_html.py \
+--input_models=examples/models \
+--output_html=examples/models/index.html
+```
+
+>   The generated HTML is pretty bare bones. You later probably want to change certain features -- for example, you can [replace the AR button](https://modelviewer.dev/docs/#augmentedreality-slots) or [toggle the Augmented Reality mode from Javascript](https://modelviewer.dev/docs/#entrydocs-augmentedreality-methods-activateAR). Also be sure to check out the [AR examples page](https://modelviewer.dev/examples/augmentedreality/).
 
 ## Serve HTML
 
+### Locally
+
+To see your website, you can spin up a local web server using Python:
+
+```
+cd examples/models
+python -m http.server
+```
+
+Then open your browser to http://localhost:8000/index.html. The caveat is that desktop browsers can load the 3D model, but don't support augmented reality. So this local server allows you to check that the models are loading fine, but to load augmented reality, you will either
+
+1.   need to load the website from a mobile device, which would likely require you to set up the desktop to users browsing from the network, and then browse from the phone using your desktop's local IP instead of `localhost`, or
+2.   serve the HTML on a proper internet server (see options below)
+
+Please update this document, or let me know the steps to get #1 to work (i.e. load the web page on a mobile device by using a local server). This would be a nice speed up in development.
+
+### On your own web server on the internet
+
+If you already have an internet server set up, then you can just upload the `examples/models` directory and load it up on your server. Then you can test your HTML from any device connected to the internet.
+
+### On a GitHub Page
+
+[GitHub Pages](https://pages.github.com/) is a free service for web serving. This is what I'm using for the [live demo](https://quarup.github.io/rugs/). Once you set it up, upload the `examples/models` directory browse to it from any internet connected device.
+
+The disadvantage of GitHub Pages is that they can take a while to pick up your changes (sometimes 10+ minutes). So it can be a bit annoying when you're making a lot of changes quickly and want to see the results right away.
+
+## Contributions and contact
+
+Feel free to use this code as you wish. If possible, please update this code as you make improvements, and/or contact me for whatever reason.
+
+Thanks!
