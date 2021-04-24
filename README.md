@@ -63,7 +63,7 @@ Mobile devices use the GLTF models for previewing and (in the case of Android) i
 Run the following comment to generate GLTF models in the examples directory:
 
 ```
-python geneator/generate_gltf.py \
+python generator/generate_gltf.py \
 --input_csv=examples/examples.csv \
 --input_images=examples/images \
 --output_models=examples/models
@@ -75,6 +75,7 @@ Explanation of each parameter:
     *    `ID` matching the name of the rug's image file.
     *    `L cm` matching the length (height) of the rug in centimeters.
     *    `W cm` matching the width of the rug in centimeters.
+    *.   All other columns are ignored by the program.
 *   `--input_images` is the directory used in the previous step
 *   `--outputmodels` will contain, per rug
     *    the `.png` file copied from `--input_images`
@@ -82,7 +83,14 @@ Explanation of each parameter:
 
 ## Generate Universal Scene Description (USD) models
 
-Next, we generate the USD models, which are necessary for the augmented reality on iOS:
+Next, we generate the USD models, which are necessary for the augmented reality on iOS.
+
+To run the USD tools, you'll need to either:
+
+1.   Run the `USD.command` script under your USD (or USDPython) directory (see USD installation step above), or
+2.   Set the corresponding python environment variables manually.
+
+Then run the converter tool to convert your GLTF files to USD:
 
 ```
 for file in examples/models/*.gl*
@@ -100,12 +108,20 @@ Next, we use the [\<model-viewer\> HTML tag](https://modelviewer.dev/) to displa
 For convenience, run this command to automatically generate HTML for the models in the examples directory:
 
 ```
-python /Users/laure/Documents/quarup/GitHub/quarup.github.io/rugs/generator/create_html.py \
+python generator/create_html.py \
 --input_models=examples/models \
 --output_html=examples/models/index.html
 ```
 
 >   The generated HTML is pretty bare bones. You later probably want to change certain features -- for example, you can [replace the AR button](https://modelviewer.dev/docs/#augmentedreality-slots) or [toggle the Augmented Reality mode from Javascript](https://modelviewer.dev/docs/#entrydocs-augmentedreality-methods-activateAR). Also be sure to check out the [AR examples page](https://modelviewer.dev/examples/augmentedreality/).
+
+Note that the HTML loads the \<model-viewer\> code from a seperate server:
+
+```
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+```
+
+When launching this on your website, you may want to copy `model-viewer.min.js` to minimize dependency on other servers.
 
 ## Serve HTML
 
