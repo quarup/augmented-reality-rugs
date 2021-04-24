@@ -101,6 +101,10 @@ done
 
 This outputs a `.usdz` file per `.gltf` file on the same directory.
 
+>   The `.usdz` model is a binary file containing a copy of the `png` image. This unfortunately means that iOS users need to download the image twice: once when they first view the 3D (GLTF) model and then again when they download the USDZ file for agumented reality.
+>
+>   Theoretically, we should be able to overcome this by using a `.usda` representation (which allows to reference the `.png` file instead of copying it) instead of `.usdz`. Unfortunately I wasn't able to get it to work, even after running `usdzconverter model.gltf model.usda`. Please update the code or contact me if you figure this out.
+
 ## Generate HTML
 
 Next, we use the [\<model-viewer\> HTML tag](https://modelviewer.dev/) to display the 3D models in HTML.
