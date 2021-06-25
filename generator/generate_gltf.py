@@ -60,6 +60,12 @@ class Rug:
         original_filename = self.getImageOriginalFilename()
         return os.path.basename(original_filename) if original_filename else None
 
+    def getImageRelativeFilename(self):
+        return os.path.relpath(self.getImageOriginalFilename())
+
+    def getImageOutputFilename(self, store_image_in_blob):
+        return self.getImageRelativeFilename() if store_image_in_blob else self.getImageLocalFilename()
+
     def getGLTF(self, store_image_in_blob=False):
         gltf = pygltflib.GLTF2(
             scene=0,
@@ -135,7 +141,7 @@ class Rug:
                     byteLength=len(self.points_blob) + len(self.texture_coords_blob) + len(self.triangles_blob)
                 )
             ],
-            images=[pygltflib.Image(uri=self.getImageLocalFilename())],
+            images=[pygltflib.Image(uri=self.getImageOutputFilename(store_image_in_blob))],
             textures=[pygltflib.Texture(source=0)],
             materials=[pygltflib.Material(
                 pbrMetallicRoughness=pygltflib.PbrMetallicRoughness(
