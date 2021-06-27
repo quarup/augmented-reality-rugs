@@ -8,9 +8,9 @@ This project converts 2D images of rugs (e.g. jpegs) into 3D models that can be 
 
 See the [live demo here](https://quarup.github.io/rugs/).
 
-![live demo](https://user-images.githubusercontent.com/46463924/123559518-c8e12380-d79c-11eb-8ee3-fdacb17481aa.png)
+![live_demo](https://user-images.githubusercontent.com/46463924/123559601-53298780-d79d-11eb-946e-c1e1cf3e3d24.png)
 
-Click on the bottom-right icon to see the rug in augmented reality. This requires a mobile device (Android or iOS). If you're on your desktop, you won't see this icon, but you should still see the 3D model.
+The Augmented Reality "See rug in your room" feature requires a mobile device (Android or iOS). If you're on your desktop, you should still be able to see the 3D model.
 
 ## Installation
 
