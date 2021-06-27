@@ -8,11 +8,56 @@ import csv
 import os
 import shutil
 
+
+def getRealRugId(id: str, input_images: str, skip_models_in_directory: str, model_suffix: str):
+    """Gets rug ID, filling in missing zero prefix when necessary"""
+    # Sometimes the CSV's ID is missing some prefixing zeros. We resolve the
+    # problem here by looking for images with prefixed zeros.
+    for id_prefix in ['', '0', '00', '000']:
+        resolved_id = f'{id_prefix}{id}'
+        # See if it exists in skip directory.
+        if os.path.isfile(f"{skip_models_in_directory}/{resolved_id}.{model_suffix}"):
+            return resolved_id
+
+        # Look for png first (because it supports transparency), then fall back to jpg.
+        for image_suffix in ['png', 'jpg']:
+            filename = f"{input_images}/{resolved_id}.{image_suffix}"
+            if os.path.isfile(filename):
+                return resolved_id
+    # Default to original ID passedi n.
+    return id
+
+class RugImage:
+    """Rug Image."""
+    def __init__(self, id: str, input_images: str):
+        self.id = id
+        self.original_filename = None
+        # Look for png first (because it supports transparency), then fall back to jpg.
+        for image_suffix in ['png', 'jpg']:
+            filename = f"{input_images}/{id}.{image_suffix}"
+            if os.path.isfile(filename):
+                self.original_filename = filename
+
+    def getId(self):
+        return self.id
+
+    def getOriginalFilename(self):
+        return self.original_filename
+
+    def getLocalFilename(self):
+        original_filename = self.getOriginalFilename()
+        return os.path.basename(original_filename) if original_filename else None
+
+    def getRelativeFilename(self):
+        return os.path.relpath(self.getOriginalFilename())
+
+    def getOutputFilename(self, store_image_in_blob):
+        return self.getRelativeFilename() if store_image_in_blob else self.getLocalFilename()
+
 class Rug:
     """Rug data."""
-    def __init__(self, id: str, length_m: float, width_m: float, input_images: str):
-        self.input_images = input_images
-        self.id = id
+    def __init__(self, image: RugImage, length_m: float, width_m: float):
+        self.image = image
         self.points = np.array(
             [
                 [+width_m / 2, 0, +length_m / 2],
@@ -41,30 +86,6 @@ class Rug:
             dtype="uint8",
         )
         self.triangles_blob = self.triangles.flatten().tobytes()
-
-    def getImageOriginalFilename(self):
-        # Look for png first (because it supports transparency).
-        filename = "{}/{}.png".format(self.input_images, self.id)
-        if os.path.isfile(filename):
-            return filename
-
-        # Fall back to jpg.
-        filename = "{}/{}.jpg".format(self.input_images, self.id)
-        if os.path.isfile(filename):
-            return filename
-
-        # File missing.
-        return None
-
-    def getImageLocalFilename(self):
-        original_filename = self.getImageOriginalFilename()
-        return os.path.basename(original_filename) if original_filename else None
-
-    def getImageRelativeFilename(self):
-        return os.path.relpath(self.getImageOriginalFilename())
-
-    def getImageOutputFilename(self, store_image_in_blob):
-        return self.getImageRelativeFilename() if store_image_in_blob else self.getImageLocalFilename()
 
     def getGLTF(self, store_image_in_blob=False):
         gltf = pygltflib.GLTF2(
@@ -141,7 +162,7 @@ class Rug:
                     byteLength=len(self.points_blob) + len(self.texture_coords_blob) + len(self.triangles_blob)
                 )
             ],
-            images=[pygltflib.Image(uri=self.getImageOutputFilename(store_image_in_blob))],
+            images=[pygltflib.Image(uri=self.image.getOutputFilename(store_image_in_blob))],
             textures=[pygltflib.Texture(source=0)],
             materials=[pygltflib.Material(
                 pbrMetallicRoughness=pygltflib.PbrMetallicRoughness(
@@ -169,30 +190,39 @@ class Generator:
         self.args = args
 
     def generate(self):
+        suffix = 'glb' if self.args.save_as_glb else 'gltf'
         with open(self.args.input_csv, newline='') as csvfile:
             reader = csv.DictReader(csvfile)
             num_written = 0
             for row in reader:
-                rug = Rug(row['ID'], float(row['L cm']) / 100, float(row['W cm']) / 100, self.args.input_images)
-                if rug.getImageOriginalFilename() is not None:
+                rug_id = getRealRugId(row['ID'], self.args.input_images,
+                                      self.args.skip_models_in_directory, suffix)
+                image = RugImage(rug_id, self.args.input_images)
+                model_filename = f"{rug_id}.{suffix}"
+                if self.args.skip_models_in_directory:
+                    skip_filename = os.path.join(self.args.skip_models_in_directory, model_filename)
+                    if os.path.isfile(skip_filename):
+                        print(f'Skipping {model_filename} because it already exists in {skip_filename}')
+                        continue
+                output_model_file = os.path.join(self.args.output_models, model_filename)
+                rug = Rug(image, float(row['L cm']) / 100, float(row['W cm']) / 100)
+                if rug.image.getOriginalFilename() is not None:
                     gltf = rug.getGLTF(store_image_in_blob=self.args.save_as_glb)
                     num_written += 1
                     if not self.args.save_as_glb:
-                        model_file = "{}/{}.gltf".format(self.args.output_models, rug.id)
-                        print(f"[{num_written}] Writing {model_file}")
-                        gltf.save(model_file)
-                        image_file = os.path.join(self.args.output_models, rug.getImageLocalFilename())
+                        print(f"[{num_written}] Writing {output_model_file}")
+                        gltf.save(output_model_file)
+                        image_file = os.path.join(self.args.output_models, rug.image.getLocalFilename())
                         print(f"[{num_written}] Copying {image_file}")
                         shutil.copyfile(
-                            rug.getImageOriginalFilename(),
+                            rug.image.getOriginalFilename(),
                             image_file)
                     else:
                         gltf.convert_buffers(BufferFormat.BINARYBLOB)
-                        model_file = "{}/{}.glb".format(self.args.output_models, rug.id)
-                        print(f"[{num_written}] Writing {model_file}")
-                        gltf.save_binary(model_file)
+                        print(f"[{num_written}] Writing {output_model_file}")
+                        gltf.save_binary(output_model_file)
                 else:
-                    print("WARNING: Skipping rug without image file. Rug ID={}".format(rug.id))
+                    print(f"WARNING: Skipping rug without image file. Rug ID={rug_id}")
             print("\nSuccess!\n")
 
 def main():
@@ -203,18 +233,12 @@ def main():
                         help='Path to input images directory')
     parser.add_argument('--output_models', metavar='path', required=True,
                         help='Path to output models directory')
-    parser.add_argument('--save_as_glb', metavar='path', default=False,
+    parser.add_argument('--skip_models_in_directory', metavar='path', default='',
+                        help='If provided, skips building models that already exist in this directory.')
+    parser.add_argument('--save_as_glb', metavar='path', default='true',
                         help='Whether to save as a binary blob')
     Generator(parser.parse_args()).generate()
 
-
-    #rug = Rug('abc', 2.00, 1.40)
-#glb = b"".join(gltf.save_to_bytes())  # save_to_bytes returns an array of the components of a glb
-
-#gltf_reloaded = pygltflib.GLTF2.load_from_bytes(glb)
-
-#         summary(gltf)  # will pretty print human readable summary of errors
-# gltf.save("../models/simple.gltf")
 
 
 if __name__ == "__main__":
