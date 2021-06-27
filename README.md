@@ -129,7 +129,7 @@ When launching this on your website, you may want to copy `model-viewer.min.js` 
 
 ## Serve HTML
 
-### Locally
+### Within your local network
 
 To see your website, you can spin up a local web server using Python:
 
@@ -138,12 +138,22 @@ cd examples/models
 python -m http.server
 ```
 
-Then open your browser to http://localhost:8000/index.html. The caveat is that desktop browsers can load the 3D model, but don't support augmented reality. So this local server allows you to check that the GLTF models are loading fine, but to load augmented reality, you will either need to
+Then open your browser to http://localhost:8000. The caveat is that desktop browsers can load the 3D model, but don't support augmented reality.
 
-1.   load the website from a mobile device, which would likely require you to set up the desktop to users browsing from the network, and then browse from the phone using your desktop's local IP instead of `localhost`, or
-2.   serve the HTML on a proper internet server (see options below)
+To test the augmented reality feature, you need to load the page on your phone or tablet. To do this, get the IP address of your desktop (MacOS, Windows, or Linux) by running:
 
-Please update this document, or let me know the steps to get #1 to work (i.e. load the web page on a mobile device by using a local server). This would be a nice speed up in development.
+```
+ifconfig
+```
+
+In the output you will see an IP address of your machine within the local network, likely starting with `192.168.`. For example, on MacOS there is a line that may look like:
+
+```
+	inet 192.168.0.45 netmask 0xffffff00 broadcast 192.168.0.255
+```
+
+Then on your phone or tablet, you should be able to load the website with augmented reality. Following the same example, it would be http://192.168.0.45:8000, but you need to modify the IP to match yours.
+
 
 ### On your own web server on the internet
 
