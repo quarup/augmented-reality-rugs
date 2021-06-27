@@ -8,7 +8,7 @@ This project converts 2D images of rugs (e.g. jpegs) into 3D models that can be 
 
 See the [live demo here](https://quarup.github.io/rugs/).
 
-![live_demo](https://user-images.githubusercontent.com/46463924/115842995-ac341280-a41e-11eb-9418-6eed882ae4c0.png)
+![live demo](https://user-images.githubusercontent.com/46463924/123559518-c8e12380-d79c-11eb-8ee3-fdacb17481aa.png)
 
 Click on the bottom-right icon to see the rug in augmented reality. This requires a mobile device (Android or iOS). If you're on your desktop, you won't see this icon, but you should still see the 3D model.
 
@@ -77,7 +77,7 @@ Explanation of each parameter:
     *    `W cm` matching the width of the rug in centimeters.
     *.   All other columns are ignored by the program.
 *   `--input_images` is the directory used in the previous step
-*   `--outputmodels` will contain, per rug
+*   `--output_models` will contain, per rug
     *    the `.png` file copied from `--input_images`
     *    the `.gltf` model containing the rug's shape and texture, referring back to the `.png` file
 
