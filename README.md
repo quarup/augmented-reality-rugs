@@ -48,8 +48,7 @@ Follow [these instructions](https://docs.github.com/en/github/creating-cloning-a
 Run the following command to prepare the images in the examples directory. It will read from the JPG files, convert, and write out the output as PNG files in the same directory:
 
 ```
-python generator/prepare_images.py \
---images "examples/images/*.jpg"
+python generator/prepare_images.py --images "examples/images/*.jpg"
 ```
 
 > The converted images are stored in `png` format primarily because `jpg` does not natively support an alpha (transparency) channel. Unfortunately, `png` compression seems to be significantly worse for big images, so the resulting files are bigger, and therefore take longer to transfer to the user's devices. It may be worth trying to figure out a way to serve smaller files.
@@ -63,10 +62,7 @@ Mobile devices use the GLTF models for previewing and (in the case of Android) i
 Run the following comment to generate GLTF models in the examples directory:
 
 ```
-python generator/generate_gltf.py \
---input_csv=examples/examples.csv \
---input_images=examples/images \
---output_models=examples/models
+python generator/generate_gltf.py --input_csv=examples/examples.csv --input_images=examples/images --output_models=examples/models
 ```
 
 Explanation of each parameter:
@@ -112,9 +108,7 @@ Next, we use the [\<model-viewer\> HTML tag](https://modelviewer.dev/) to displa
 For convenience, run this command to automatically generate HTML for the models in the examples directory:
 
 ```
-python generator/create_html.py \
---input_models=examples/models \
---output_html=examples/models/index.html
+python generator/create_html.py --input_models=examples/models --output_html=examples/models/index.html
 ```
 
 >   The generated HTML is pretty bare bones. You later probably want to change certain features -- for example, you can [replace the AR button](https://modelviewer.dev/docs/#augmentedreality-slots) or [toggle the Augmented Reality mode from Javascript](https://modelviewer.dev/docs/#entrydocs-augmentedreality-methods-activateAR). Also be sure to check out the [AR examples page](https://modelviewer.dev/examples/augmentedreality/).
