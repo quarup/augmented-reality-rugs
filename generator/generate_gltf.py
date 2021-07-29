@@ -37,6 +37,7 @@ class RugImage:
             filename = f"{input_images}/{id}.{image_suffix}"
             if os.path.isfile(filename):
                 self.original_filename = filename
+                break
 
     def getId(self):
         return self.id
