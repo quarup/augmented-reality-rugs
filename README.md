@@ -6,11 +6,24 @@ This project converts 2D images of rugs (e.g. jpegs) into 3D models that can be 
 
 ## Live demo
 
+### On GitHub
+
 See the [live demo here](https://quarup.github.io/rugs/).
 
 ![live_demo](https://user-images.githubusercontent.com/46463924/123559601-53298780-d79d-11eb-946e-c1e1cf3e3d24.png)
 
 The Augmented Reality "See rug in your room" feature requires a mobile device (Android or iOS). If you're on your desktop, you should still be able to see the 3D model.
+
+### On Teppichportal
+
+I've developed this as a feature for https://www.teppichportal.ch/. Open one of the product pages and click on the "View in your room" button on a mobile device (Android or iOS):
+
+![Teppichportal product page](https://user-images.githubusercontent.com/46463924/145561153-3e64ce6b-5bcc-46e0-8715-1b8ea5b5601a.png)
+
+Following the instructions, you'll see the rug:
+
+![Teppichportal AR rug](https://user-images.githubusercontent.com/46463924/145561707-edd8314b-960f-4842-bbe2-508616f79c89.png)
+
 
 ## Installation
 
@@ -158,10 +171,6 @@ If you already have an internet server set up, then you can just upload the `exa
 [GitHub Pages](https://pages.github.com/) is a free service for web serving. This is what I'm using for the [live demo](https://quarup.github.io/rugs/). Once you set it up, upload the `examples/models` directory browse to it from any internet connected device.
 
 The disadvantage of GitHub Pages is that they can take a while to pick up your changes (sometimes 10+ minutes). So it can be a bit annoying when you're making a lot of changes quickly and want to see the results right away.
-
-## Inspiration and history
-
-I've developed this as a feature for https://www.teppichportal.ch/. Hopefully you'll see it live there soon.
 
 ## Contributions and contact
 
