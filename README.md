@@ -51,6 +51,8 @@ In the page for Apple's [Augmented Reality Tools](https://developer.apple.com/au
 
 <a link="https://developer.apple.com/augmented-reality/tools/"><img src="https://user-images.githubusercontent.com/46463924/161235320-096aa926-3c97-42e6-8108-c19250083611.png"></a>
 
+Then proceed to install Reality Converter.
+
 ### Option 2: USD command line tool.
 
 Alternatively you can run the USD tool libraries, which take a bit more work, and are (at least in theory) more compatible with different systems, including non-Mac computers.
