@@ -39,11 +39,23 @@ The Augmented Reality "See rug in your room" feature requires a mobile device (A
     python -m pip install numpy          # Install numpy mathematics library.
     python -m pip install Pillow         # Install Pillow for reading and writing images.
     ```
-### Install Universal Scene Description (USD)
+### Install a converter from GLTF to Universal Scene Description (USD)
 
 USD is the Pixar format for 3D animated models, which is required for using Augmented Reality on iOS (iPhone, iPad) devices.
 
-On *MacOS*, the easiest solution is to install the [pre-built *0.62* version of USDPython](https://developer.apple.com/download/more/?=USDPython). As of April 2021, later versions [have a bug](https://stackoverflow.com/questions/60116329/how-can-i-solve-usdzconvert-pxr-import-error), so make sure to download `version 0.62`.
+We have two options below on how to convert from GL Transmission Format (GLTF) models to USD.
+
+#### Option 1 (preferred, Mac-only): Install Reality Converter
+
+In the page for Apple's [Augmented Reality Tools](https://developer.apple.com/augmented-reality/tools/), click on the download button for **Reality Converter**:
+
+<a link="https://developer.apple.com/augmented-reality/tools/"><img src="https://user-images.githubusercontent.com/46463924/161235320-096aa926-3c97-42e6-8108-c19250083611.png"></a>
+
+### Option 2: USD command line tool.
+
+Alternatively you can run the USD tool libraries, which take a bit more work, and are (at least in theory) more compatible with different systems, including non-Mac computers.
+
+On *MacOS*, you can install the [pre-built *0.62* version of USDPython](https://developer.apple.com/download/more/?=USDPython). As of April 2021, later versions [have a bug](https://stackoverflow.com/questions/60116329/how-can-i-solve-usdzconvert-pxr-import-error), so make sure to download `version 0.62`.
 
 If you don't have a Mac, you'll either have to look for pre-built binaries for your OS, or you'll need to [build USD from scratch](https://github.com/PixarAnimationStudios/USD). I struggled to build USD on my MacOS, though. Let me know if you have better luck. When building from scratch, you'll get some extra tools (e.g. USD Viewer, Python library support).
 
@@ -95,7 +107,19 @@ Explanation of each parameter:
 
 Next, we generate the USD models, which are necessary for the augmented reality on iOS.
 
-To run the USD tools, you'll need to either:
+We need to convert each `.gltf` file into a corresponding `.usdz` in same directory. The next step depends on which tool you installed earlier.
+
+### Option 1 (preferred, Mac-only): Convert to USDZ using the Reality Converter
+
+If you installed Reality Converter (see instructions above), then launch it now and:
+
+1. Open all the `.gltf` files you generated
+2. Preview the 3D models to see what they look like
+3. Export to `.usdz` files in the same directory
+
+### Option 2: Convert to USDZ using the USD command line tool.
+
+To run the USD command line tools, you'll need to either:
 
 1.   Run the `USD.command` script under your USD (or USDPython) directory (see USD installation step above), or
 2.   Set the corresponding python environment variables manually.
@@ -109,7 +133,7 @@ do
 done
 ```
 
-This outputs a `.usdz` file per `.gltf` file on the same directory.
+### Notes about converting to USDZ
 
 >   The `.usdz` model is a binary file containing a copy of the `png` image. This unfortunately means that iOS users need to download the image twice: once when they first view the 3D (GLTF) model and then again when they download the USDZ file for agumented reality.
 >
