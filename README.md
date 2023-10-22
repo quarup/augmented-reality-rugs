@@ -4,6 +4,7 @@ This project converts 2D images of rugs (e.g. jpegs) into 3D models that can be 
 
 ![augmented_reality_rug](https://user-images.githubusercontent.com/46463924/115776391-59257580-a3b4-11eb-904e-6108c44c9858.png)
 
+<!---
 ## Live demo
 
 ### On Teppichportal
@@ -16,15 +17,17 @@ I've developed this as a feature for https://www.teppichportal.ch/. Open one of 
 Following the instructions, you'll see the rug:
 
 ![Teppichportal AR rug](https://user-images.githubusercontent.com/46463924/145561707-edd8314b-960f-4842-bbe2-508616f79c89.png)
+--->
 
-### On GitHub
+## Example demo
 
-You can also see a [developer version of the demo](https://quarup.github.io/rugs/).
+You can see the [demo on GitHub](https://quarup.github.io/rugs/).
 
 ![developer version of the demo](https://user-images.githubusercontent.com/46463924/123559601-53298780-d79d-11eb-946e-c1e1cf3e3d24.png)
 
 The Augmented Reality "See rug in your room" feature requires a mobile device (Android or iOS). If you're on your desktop, you should still be able to see the 3D model.
 
+![developer version of the demo](https://user-images.githubusercontent.com/46463924/145561707-edd8314b-960f-4842-bbe2-508616f79c89.png)
 
 ## Installation
 
